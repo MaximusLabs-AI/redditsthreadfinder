@@ -1,3 +1,5 @@
+import path from "path";
+import { fileURLToPath } from "url";
 import express from "express";
 import cors from "cors";
 import Groq from "groq-sdk";
@@ -11,6 +13,9 @@ process.on("unhandledRejection", (err) => {
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // ---------------------------------------------------------------------------
 // Groq client (optional — only needed for reply template generation)
@@ -29,6 +34,9 @@ if (GROQ_API_KEY) {
 // ---------------------------------------------------------------------------
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from the 'dist' directory
+app.use(express.static(path.join(__dirname, "dist")));
 
 // ---------------------------------------------------------------------------
 // Cache  (key → { data, timestamp })   TTL = 1 hour
@@ -319,6 +327,11 @@ app.get("/api/health", (_req, res) => {
         service: "reddit-threads-finder",
         replyGenerationEnabled: !!groq,
     });
+});
+
+// For all other requests, return the frontend index.html
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
 // ---------------------------------------------------------------------------
