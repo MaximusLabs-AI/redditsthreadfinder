@@ -1,5 +1,6 @@
 export async function searchRedditThreads(keyword, sort = 'relevance', timeRange = 'month', subreddits = []) {
-    const response = await fetch('/api/reddit-threads', {
+    const API_URL = "https://redditsthreadfinder.onrender.com";
+    const response = await fetch(`${API_URL}/api/reddit-threads`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ keyword, sort, timeRange, subreddits }),
@@ -14,7 +15,8 @@ export async function searchRedditThreads(keyword, sort = 'relevance', timeRange
 }
 
 export async function generateReplyTemplate(thread, brandName, brandDescription) {
-    const response = await fetch('/api/generate-reply', {
+    const API_URL = "https://redditsthreadfinder.onrender.com";
+    const response = await fetch(`${API_URL}/api/generate-reply`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
